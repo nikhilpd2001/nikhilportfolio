@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nikhil Prasad — Portfolio & Learnings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. Global & Color Variables --- */
+        :root {
+            --bg: #f8fafc;
+            --sidebar: #ffffff;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --accent: #047857;
+            --line: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            /* New Learnings Page Colors */
+            --learnings-bg: rgba(0, 0, 0, 0.4);
+            --learnings-accent: #00e0ff;
+            --learnings-text: #f1f1f1;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: url('pexels-kaip-534757.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding-top: 0; 
+        }
+
+        /* --- Modern Compact Nav Bar --- */
+        .top-nav {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            padding: 6px 12px;
+            gap: 6px;
+            width: fit-content;
+            min-width: 220px;
+        }
+
+        .top-nav button {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            border-radius: 999px;
+            transition: all 0.3s ease;
+        }
+
+        .top-nav button:hover {
+            background-color: rgba(4, 120, 87, 0.1);
+            color: var(--accent);
+        }
+
+        .top-nav button.active {
+            background-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(4, 120, 87, 0.3);
+        }
+
+        /* --- Page Layout --- */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            min-height: 100vh;
+            padding-top: 80px;
+            box-sizing: border-box;
+            /* New: Make all pages flex, but the default state is hidden */
+            display: flex;
+        }
+
+        .page.active {
+            display: flex; /* Show flex layout when active */
+            opacity: 1;
+        }
+        
+        /* --- Portfolio Page Styles (Reverted to Original) --- */
+        #portfolio-page {
+            color: var(--text);
+        }
+
+        #portfolio-page .sidebar {
+            position: fixed;
+            top: 55px; 
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 55px);
+            background: rgba(255, 255, 255, 0.8);
+            border-right: 1px solid var(--line);
+            padding: 30px 16px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+            z-index: 3;
+            overflow-y: auto; /* Added for consistency, but was implicitly scrolling */
+        }
+
+        #portfolio-page .sidebar h3 {
+            margin: 0 0 24px;
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        #portfolio-page .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            color: var(--text);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+
+        #portfolio-page .sidebar a:hover,
+        #portfolio-page .sidebar a.active {
+            background: var(--line);
+            color: var(--accent);
+        }
+
+        #portfolio-page .main {
+            margin-left: 270px;
+            margin-right: 40%;
+            padding: 30px;
+            z-index: 2;
+            position: relative;
+            margin-top: -30px;
+        }
+
+        #portfolio-page section { margin-bottom: 60px; }
+        #portfolio-page section:last-of-type { margin-bottom: 0; }
+
+        #portfolio-page section h2 {
+            font-size: 22px;
+            margin-bottom: 16px;
+            color: var(--accent);
+            border-bottom: 2px solid var(--line);
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #portfolio-page .card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+        }
+
+        #portfolio-page .banner {
+            background: rgba(236, 253, 245, 0.5);
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+        }
+
+        #portfolio-page .banner img.profile-pic {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        #portfolio-page .banner-content { flex: 1; }
+
+        #portfolio-page .banner-content h1 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--accent);
+        }
+
+        #portfolio-page .banner-content p {
+            margin: 6px 0 16px;
+            color: #0f172a;
+        }
+
+        #portfolio-page .contact-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        #portfolio-page .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        #portfolio-page .chip {
+            background: #ecfdf5;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 14px;
+            border: 1px solid var(--line);
+        }
+
+        #portfolio-page table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #portfolio-page table th, #portfolio-page table td {
+            border: 1px solid var(--line);
+            padding: 10px;
+            text-align: left;
+        }
+
+        #portfolio-page table th {
+            background: rgba(240, 253, 244, 0.5);
+            color: var(--accent);
+        }
+
+        #portfolio-page .bg-video {
+            position: fixed;
+            top: 0; right: 0;
+            width: 40%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* ----------------------------------- */
+        /* --- Learnings Page Specific Styles --- */
+        /* ----------------------------------- */
+        #learnings-page {
+            color: var(--learnings-text);
+        }
+        
+        #learnings-page .sidebar {
+            position: fixed;
+            top: 55px; 
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 55px);
+            background: rgba(0, 0, 0, 0.6); 
+            border-right: 1px solid var(--learnings-accent);
+            padding: 30px 16px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+            z-index: 3;
+            overflow-y: auto;
+        }
+
+        #learnings-page .sidebar h3 {
+            margin: 0 0 24px;
+            font-size: 18px;
+            color: var(--learnings-accent);
+        }
+        
+        #learnings-page .sidebar a {
+            display: block;
+            margin: 10px 0;
+            color: var(--learnings-text);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: background 0.2s;
+            word-wrap: break-word; 
+        }
+
+        #learnings-page .sidebar a:hover,
+        #learnings-page .sidebar a.active {
+            background: rgba(0, 224, 255, 0.2); 
+            color: var(--learnings-accent);
+        }
+        
+        #learnings-page .main-content {
+            /* This margin creates space for the fixed sidebar */
+            margin-left: 270px; 
+            flex-grow: 1;
+            padding: 30px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        #learnings-page header {
+            text-align: center;
+            padding: 10vh 20px 5vh;
+            width: 100%;
+            margin-top: 0; 
+            box-sizing: border-box;
+        }
+
+        #learnings-page header h1 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0,0,0,0.7);
+            margin: 0;
+        }
+
+        #learnings-page .content {
+            width: 100%;
+            max-width: 900px;
+            background: var(--learnings-bg); 
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+            margin-right: auto;
+            margin-left: auto; 
+        }
+
+        #learnings-page section h2 {
+            color: var(--learnings-accent);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--learnings-accent);
+            display: inline-block;
+            padding-bottom: 4px;
+            font-size: 1.8rem;
+            margin-top: 40px;
+        }
+        
+        #learnings-page section:first-of-type h2 {
+            margin-top: 0;
+        }
+
+        #learnings-page ul {
+            margin-top: 10px;
+            margin-bottom: 25px;
+            list-style: disc;
+            padding-left: 25px;
+            line-height: 1.8;
+            color: var(--learnings-text);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 900px) { 
+            /* Media Query for Mobile/Tablet */
+            
+            /* Change page layout to vertical stack on small screens */
+            #portfolio-page,
+            #learnings-page { flex-direction: column; }
+            
+            /* Remove fixed positions and restore full width for sidebars */
+            #portfolio-page .sidebar,
+            #learnings-page .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                box-shadow: none;
+                padding-top: 80px; /* Push down from top nav when static */
+            }
+            #learnings-page .sidebar {
+                background: rgba(0, 0, 0, 0.8); /* Darker background for dark mode */
+                border-bottom: 1px solid var(--learnings-accent);
+            }
+
+            /* Remove left margins on main content */
+            #portfolio-page .main,
+            #learnings-page .main-content {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 30px 20px;
+                padding-top: 20px;
+            }
+            
+            /* Remove the large video background */
+            #portfolio-page .bg-video { display: none; }
+            
+            /* Center elements on mobile */
+            #portfolio-page .banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            #portfolio-page .banner img.profile-pic { margin-bottom: 10px; }
+            #portfolio-page .contact-icons { justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            #learnings-page header h1 { font-size: 2rem; }
+            #learnings-page .content { padding: 25px; }
+            .top-nav { top: 10px; padding: 5px 10px; }
+            .top-nav button { padding: 8px 14px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <button data-target="#portfolio-page" class="active">Portfolio</button>
+        <button data-target="#learnings-page">Learnings</button>
+    </nav>
+
+    <div id="portfolio-page" class="page active">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="Welcome to the heart of Chicago ♥️🇺🇸 as dusk falls the city glows with unparalleled beauty ✨ e.mp4" type="video/mp4">
+        </video>
+
+        <nav class="sidebar">
+            <h3>Navigation</h3>
+            <a href="#overview">📄 Overview</a>
+            <a href="#experience">💼 Professional Journey</a>
+            <a href="#education">🎓 Academic Background</a>
+            <a href="#skills">🛠 Core Competencies</a>
+            <a href="#languages">🌐 Languages</a>
+            <a href="#awards">🏅 Achievements</a>
+            <a href="#contact">📞 Contact</a>
+        </nav>
+
+        <div class="main">
+            <div class="banner">
+                <img src="WhatsApp Image 2025-08-29 at 17.55.41_a27f257d.jpg" alt="Nikhil Prasad" class="profile-pic">
+                <div class="banner-content">
+                    <h1>🌟 Nikhil Prasad</h1>
+                    <p>Cloud & Networking Engineer | Market Research Analyst | Delhi, India</p>
+                    <div class="contact-icons">
+                        <span>📧 sultannikhil1234@gmail.com</span>
+                        <span>📞 +91 9205017126 / +91 9891498189</span>
+                        <span>📍 Delhi, India</span>
+                        <span>🔗 <a href="https://www.linkedin.com/in/nikhil-prasad-968841a7/" target="_blank">LinkedIn</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <section id="overview">
+                <h2>📄 Overview</h2>
+                <div class="card">
+                    <p>An enthusiastic individual with high motivation, holding a B.Tech in Mechanical Engineering from DTU. Skilled in project implementation, eager to learn new technologies, and passionate about innovation.</p>
+                </div>
+            </section>
+
+            <section id="experience">
+                <h2>💼 Professional Journey</h2>
+                <div class="card">
+
+                    <h3>Cloud & Infrastructure Engineer — Unicloud Labs Pvt Ltd</h3>
+                    <p><i>Noida, UP • November 2025 – Present</i></p>
+                    <ul>
+                        <li>Configured and managed cloud infrastructure for multiple client projects using Oracle Cloud Infrastructure (OCI).</li>
+                        <li>Set up and maintained Virtual Machines (VMs), Virtual Cloud Networks (VCNs), and Load Balancers to ensure secure and scalable deployments.</li>
+                        <li>Worked on infrastructure security and monitoring using SIEM tools, especially Wazuh, for log analysis, threat monitoring, and system security management.</li>
+                        <li>Created and maintained technical documentation and operational reports including CPU utilization, memory usage, disk utilization, and backup status reports.</li>
+                        <li>Implemented and managed CI/CD pipelines for various projects using GitHub, GitLab, and Jenkins to automate deployment workflows.</li>
+                        <li>Assisted in server monitoring, troubleshooting, and infrastructure optimization to improve system performance and reliability.</li>
+                        <li>Collaborated with development and operations teams to ensure smooth deployment and maintenance of applications across environments.</li>
+                        <li>Worked in MYSQL database and configured SQL Always ON High Availability Replication in linux and windows servers.</li>
+                        <li>Setup OpenVPN in OCI</li>
+                        <li>Setup VPN tunnel between OCI and AWS</li>
+        </ul>
+    </div>
+              <div class="card">
+                    <h3>Market Research Analyst — Quantish Opinion</h3>
+                    <p><i>Noida, UP • May 2025 – July 2025</i></p>
+                    <ul>
+                        <li>Project preparation, data validation, and error analysis.</li>
+                        <li>Handled AI tool-based project setups (ChatGPT, Gemini, QuiltBot).</li>
+                        <li>Reviewed international studies and prepared client-ready outputs.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Business Development Executive — CertOcean</h3>
+                    <p><i>Delhi • May 2024 – Sep 2024</i></p>
+                    <ul>
+                        <li>Lead generation through email and social campaigns.</li>
+                        <li>Maintained records and improved outreach strategy.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Intern — Ess Kay Groups</h3>
+                    <p><i>Greater Noida, UP • Sep 2021 – Oct 2021</i></p>
+                    <ul>
+                        <li>Developed prototypes in assembly line as per client requirements.</li>
+                        <li>Measured dimensions using height gauge and vernier.</li>
+                        <li>Documented and performed various prototype tests.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Intern — Amber Enterprise Pvt Ltd</h3>
+                    <p><i>Jhajjar, Haryana • Jul 2021 – Aug 2021</i></p>
+                    <ul>
+                        <li>Designed RAC parts using AutoCAD and SolidWorks.</li>
+                        <li>Assembled AC components and performed prototype testing.</li>
+                        <li>Prepared documentation and reports.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="education">
+                <h2>🎓 Academic Background</h2>
+                <div class="card">
+                    <table>
+                        <tr><th>Degree</th><th>Institution</th><th>Year</th><th>Score</th></tr>
+                        <tr><td>Diploma in Cloud Computing with AI</td><td>Jetking Infotrain Pvt Ltd</td><td>2024–2025</td><td>80%</td></tr>
+                        <tr><td>B.Tech Mechanical Engineering</td><td>DTU</td><td>2019–2023</td><td>7.02 CGPA</td></tr>
+                        <tr><td>Senior Secondary (XII)</td><td>AVB Public School</td><td>2019</td><td>76%</td></tr>
+                        <tr><td>High School (X)</td><td>AVB Public School</td><td>2017</td><td>8.2 CGPA</td></tr>
+                    </table>
+                </div>
+            </section>
+
+            <section id="skills">
+                <h2>🛠 Core Competencies</h2>
+                <div class="card chips">
+                    <span class="chip">MS Word</span>
+                    <span class="chip">Oracle Cloud Certified</span>
+                    <span class="chip">SIEM Tools (WAZUH)</span>
+                    <span class="chip">Jenkins</span>
+                    <span class="chip">GitHub</span>
+                    <span class="chip">Gitlab</span>
+                    <span class="chip">MS Excel</span>
+                    <span class="chip">MS PowerPoint</span>
+                    <span class="chip">AutoCAD</span>
+                    <span class="chip">SolidWorks</span>
+                    <span class="chip">MCSA</span>
+                    <span class="chip">CCNA</span>
+                    <span class="chip">AWS</span>
+                    <span class="chip">CompTIA A+</span>
+                    <span class="chip">CompTIA N+</span>
+                    <span class="chip">RedHat SA1</span>
+                    <span class="chip">Azure-900</span>
+                    <span class="chip">Linux (CentOS, Ubuntu & Oracle Linux)</span>
+                </div>
+            </section>
+
+            <section id="languages">
+                <h2>🌐 Languages</h2>
+                <div class="card chips">
+                    <span class="chip">English — Fluent</span>
+                    <span class="chip">Hindi — Fluent</span>
+                </div>
+            </section>
+
+            <section id="awards">
+                <h2>🏅 Achievements</h2>
+                <div class="card">
+                    <ul>
+                        <li>National Science Olympiad — School Rank 7</li>
+                        <li>Skating Competition — 3rd Place</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="contact">
+                <h2>📞 Contact</h2>
+                <div class="card">
+                    📧 sultannikhil1234@gmail.com <br>
+                    📞 +91 9205017126 / +91 9891498189 <br>
+                    📍 Delhi, India <br>
+                    🔗 <a href="https://www.linkedin.com/in/nikhil-prasad-968841a7/" target="_blank">LinkedIn</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="learnings-page" class="page">
+        <nav class="sidebar">
+            <h3>Technical Skills</h3>
+            <a href="#oci-caa">☁️ OCI Certified Architect Associate</a>
+            <a href="#aws-saa">☁️ AWS Solutions Architect Associate</a>
+            <a href="#ccna">💻 CCNA</a>
+            <a href="#comptia-n">📡 CompTIA Network+</a>
+            <a href="#comptia-a">🖥️ CompTIA A+</a>
+            <a href="#mcsa">🔑 MCSA</a>
+        </nav>
+
+        <div class="main-content">
+            <header>
+                <h1>Skills & Hands-on Experience</h1>
+            </header>
+
+            <div class="content">
+                 <section id="oci-caa">
+                    <h2>OCI Certified Architect Associate</h2>
+                    <ul>
+                        <li>OCI Compute – Creating Virtual Machines (VM), Shapes, Images, Boot Volumes, Custom Images, SSH Keys, User Data Scripts (Cloud-init)</li>
+                        <li>OCI Storage – Block Volumes, Boot Volumes, Volume Backup Policies, Manual & Scheduled Backups, Incremental & Full Backups, Volume Cloning</li>
+                        <li>OCI Networking – VCN, Public & Private Subnets, Route Tables, Security Lists, Network Security Groups (NSG), Internet Gateway, NAT Gateway, Service Gateway,           Dynamic Routing Gateway (DRG), Local Peering Gateway (LPG), Remote Peering</li>
+                        <li>VPN & Connectivity – Site-to-Site VPN Setup, IPSec Tunnel Configuration, OCI to AWS VPN Tunnel Setup, OpenVPN Setup in OCI, FastConnect Basics</li>
+                        <li>OCI CLI & Automation – OCI CLI Installation, Configuration, Uploading Data through OCI CLI, Object Storage Operations, Automation Scripts</li>
+                        <li>Object Storage – Creating Buckets, Storage Tiers, Lifecycle Rules, Retention Policies, Object Versioning, Pre-Authenticated Requests, Encryption</li>
+                        <li>OCI IAM – Users, Groups, Policies, Compartments, Dynamic Groups, Federation, Identity Domains, MFA</li>
+                        <li>Load Balancing – OCI Load Balancer, Network Load Balancer (NLB), Backend Sets, Health Checks, SSL Certificate Attachment & Management</li>
+                        <li>Autoscaling – Instance Pool Setup, Autoscaling Configuration, Metric-based Scaling Policies</li>
+                        <li>Monitoring & Alerts – OCI Monitoring, Creating Alarms, Notification Topics, CPU/Disk/Memory Utilization Alerts, Custom Metrics</li>
+                        <li>Operations Insights & Stack Monitoring – Resource Monitoring, Database Monitoring, Host Monitoring, Capacity Planning, Performance Analysis</li>
+                        <li>Disaster Recovery – Full Stack Disaster Recovery (FSDR), DR Plans, Switchover & Failover Testing</li>
+                        <li>Database Services – OCI SQL Database, Always-On High Availability, Database Backup & Recovery, SQL Replication on Linux & Windows Servers</li>
+                        <li>Storage Solutions – Block Storage, File Storage Service (FSS), Object Storage</li>
+                        <li>DevOps & CI/CD – GitHub, GitLab, Jenkins Setup, CI/CD Pipeline Configuration, Deployment Automation</li>
+                    </ul>
+                </section>
+
+                <section id="aws-saa">
+                    <h2>AWS Solutions Architect Associate</h2>
+                    <ul>
+                        <li>EC2, Tenancy, Snapshots, AMI, Placement Groups, User Data Scripts</li>
+                        <li>VPC, VPN, NAT Gateway, Prefix list, NACL, Security Groups, Internet Gateway, VPC Peering, Transit Gateway, Endpoints, Endpoint services</li>
+                        <li>Route53, Healthchecks</li>
+                        <li>Application Load Balancer, Network Load Balancer, Gateway Load Balancers</li>
+                        <li>Auto Scaling, Manual, Scheduled & Dynamic Scaling, Termination Policies</li>
+                        <li>Amazon S3 – Storage Types, Static Web Hosting, CORS, Lifecycle Manager, Object Lock, Encryption, Access Points</li>
+                        <li>AWS IAM – Users, Groups, Roles, Policies, Organizations, Identity Center, MFA</li>
+                        <li>Storage: Block (EBS), File (EFS, FSx), Object (S3)</li>
+                    </ul>
+                </section>
+
+                <section id="ccna">
+                    <h2>CCNA</h2>
+                    <ul>
+                        <li>Routing Protocols: OSPF, EIGRP, BGP, RIP</li>
+                        <li>Switching, VLAN, Inter-VLAN Communication, STP, Port-Security</li>
+                        <li>HSRP, VRRP, GLBP, Frame Relay</li>
+                        <li>Telnet, SSH, RDP, DNS, DHCP, TFTP</li>
+                    </ul>
+                </section>
+
+                <section id="comptia-n">
+                    <h2>CompTIA Network+</h2>
+                    <ul>
+                        <li>Network Devices, Topologies, Protocols, OSI Model</li>
+                        <li>Types of Cables, Color Coding, IPv4, IPv6, Subnetting</li>
+                    </ul>
+                </section>
+
+                <section id="comptia-a">
+                    <h2>CompTIA A+</h2>
+                    <ul>
+                        <li>Motherboards, Northbridge & Southbridge, BIOS, UEFI, CMOS</li>
+                        <li>Active & Passive Cooling, SMPS, Sandy Bridge, TPM, Bitlocker</li>
+                        <li>Disk Partitioning, File Systems, RAM Types, File Sharing</li>
+                        <li>Virtualization (VMware, Oracle VirtualBox), Linux Fundamentals</li>
+                    </ul>
+                </section>
+
+                <section id="mcsa">
+                    <h2>MCSA</h2>
+                    <ul>
+                        <li>ADDS, ADC, CDC, RODC, OU, External Trust, GPO Management</li>
+                        <li>WDS, IIS, DHCP, DHCP Failover, DNS, DFS, Failover Clustering</li>
+                        <li>Login/Logon Scripts, iSCSI, FSMO Roles (Transfer/Seize)</li>
+                        <li>LAN Routing, VPN, NIC Teaming</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Top Navigation Tabs ---
+        const tabs = document.querySelectorAll('.top-nav button');
+        const pages = document.querySelectorAll('.page');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.top-nav button.active')?.classList.remove('active');
+                
+                // Use a loop to remove 'active' from all pages, 
+                // as some might be flex and some might be block initially
+                pages.forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.querySelector(tab.dataset.target).classList.add('active');
+                window.scrollTo(0, 0);
+            });
+        });
+
+        // --- Sidebar Highlight Logic ---
+        const portfolioSections = document.querySelectorAll('#portfolio-page section');
+        const portfolioNavLinks = document.querySelectorAll('#portfolio-page .sidebar a');
+
+        const learningsSections = document.querySelectorAll('#learnings-page section');
+        const learningsNavLinks = document.querySelectorAll('#learnings-page .sidebar a');
+        const learningsHeader = document.querySelector('#learnings-page header');
+
+
+        const updateSidebarHighlight = () => {
+             // Logic for Portfolio Page
+            if (document.querySelector('#portfolio-page.active')) {
+                let current = '';
+                portfolioSections.forEach(section => {
+                    // Offset adjusted for fixed nav and padding
+                    const sectionTop = section.offsetTop + 55 - 120; 
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                portfolioNavLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            } 
+            
+            // Logic for Learnings Page
+            else if (document.querySelector('#learnings-page.active')) {
+                let current = '';
+                // Get offset relative to the document
+                const mainContentOffset = document.querySelector('#learnings-page .main-content')?.getBoundingClientRect().top + window.scrollY || 0;
+                
+                learningsSections.forEach(section => {
+                    // Calculate section top relative to the document
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY - 120; 
+
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                learningsNavLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }
+
+
+        window.addEventListener('scroll', updateSidebarHighlight);
+        window.addEventListener('load', updateSidebarHighlight); // Initial check
+        
+        // Ensure the first link is active on page load/switch for a nice default state
+        document.addEventListener('DOMContentLoaded', () => {
+            if (portfolioNavLinks.length > 0) {
+                // Set the active class on the first item for the initially active page
+                portfolioNavLinks[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
